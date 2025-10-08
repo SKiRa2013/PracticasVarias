@@ -1,0 +1,20 @@
+# Archivos del sistema y del editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.tmp
+*.log
+
+# Caches y compilaciones genéricas
+__pycache__/
+*.pyc
+*.pyo
+*.bak
+
+# Archivos de compresión o empaquetado
+*.zip
+*.tar
+*.gz
+*.7z
