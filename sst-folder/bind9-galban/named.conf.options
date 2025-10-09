@@ -1,7 +1,7 @@
 options {
 	directory "/var/cache/bind";
 	recursion yes;
-	allow-recursion { 10.20.68.0/24; };
+	allow-recursion { 10.20.68.0/23; };
 	allow-query { any; };
 	listen-on { any; };
 
@@ -25,6 +25,6 @@ options {
 	//========================================================================
 	dnssec-validation auto;
 
-	allow-transfer { none; };
-	// listen-on-v6 { any; };
+	allow-transfer { any; };
+	listen-on-v6 { any; };
 };

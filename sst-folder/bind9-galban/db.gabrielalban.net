@@ -3,7 +3,7 @@
 ;
 $TTL	604800
 @	IN	SOA	gabrielalban.net. root.gabrielalban.net. (
-			      3		; Serial
+			      5		; Serial
 			 604800		; Refresh
 			  86400		; Retry
 			2419200		; Expire
@@ -11,8 +11,10 @@ $TTL	604800
 ;
 	IN	NS	dns.gabrielalban.net.
 
-dns		IN	A	10.20.68.190
-@		IN	A	10.20.68.190
-www		IN	A	10.20.68.190
-intranet	IN	A	10.20.68.190
-correo		IN	A	10.20.68.190
+dns		IN	A	10.20.68.106
+@		IN	A	10.20.68.106
+www		IN	A	10.20.68.106
+intranet	IN	A	10.20.68.106
+correo		IN	A	10.20.68.106
+mail		CNAME	correo.gabrielalban.net.
+zeus		IN	A	10.20.68.106

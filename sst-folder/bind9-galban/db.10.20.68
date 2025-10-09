@@ -3,13 +3,13 @@
 ;
 $TTL	604800
 @	IN	SOA	gabrielalban.net. root.gabrielalban.net. (
-			      3		; Serial
+			      5		; Serial
 			 604800		; Refresh
 			  86400		; Retry
 			2419200		; Expire
 			 604800 )	; Negative Cache TTL
 ;
 
-@	IN	NS	gabrielalban.net.
+@	IN	NS	dns.gabrielalban.net.
 
-190	IN	PTR	dns.gabrielalban.net.
+106	IN	PTR	dns.gabrielalban.net.
