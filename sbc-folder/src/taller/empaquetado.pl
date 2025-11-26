@@ -114,7 +114,7 @@ regla_cambiar_bolsa_grandes :-
     bolsa(Numero, Lista),
     length(Lista, Cantidad),
     Cantidad >= 4,
-    NuevoNumero = Numero + 1,
+    NuevoNumero is Numero + 1,
     assert(bolsa(NuevoNumero, [])),
     write("Cambiando a bolsa "), write(NuevoNumero), write(" para productos grandes"), nl.
 
@@ -146,7 +146,7 @@ regla_cambiar_bolsa_medianos :-
     bolsa(Numero, Lista),
     length(Lista, Cantidad),
     Cantidad >= 5,
-    NuevoNumero = Numero + 1,
+    NuevoNumero is Numero + 1,
     assert(bolsa(NuevoNumero, [])),
     write("Cambiando a bolsa "), write(NuevoNumero), write(" para productos medianos"), nl.
 
