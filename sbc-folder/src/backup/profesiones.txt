@@ -1,3 +1,0 @@
-carrera(julian,ingeniero_sistemas).
-carrera(jairo,artesano).
-carrera(pedro,ingeniero_electronico).

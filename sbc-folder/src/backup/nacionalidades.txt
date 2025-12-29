@@ -1,3 +1,0 @@
-nacionalidad(juan,colombia).
-nacionalidad(julian,colombia).
-nacionalidad(richard,eeuu).
