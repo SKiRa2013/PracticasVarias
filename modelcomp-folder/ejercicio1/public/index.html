@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        
+        <title>Ejercicio web 1 - Modelos de Computación</title>
+    </head>
+    <body>
+        <div class="container text-center mt-5">
+            <div class="row mb-3 align-items-center border p-3">
+                <div class="col-9">
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-4 text-end"><p class="m-0">Lado 1:</p></div>
+                        <div class="col-8"><input type="text" id="lado1" class="form-control"></div>
+                    </div>
+                    
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-4 text-end"><p class="m-0">Lado 2:</p></div>
+                        <div class="col-8"><input type="text" id="lado2" class="form-control"></div>
+                    </div>
+                    
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-4 text-end"><p class="m-0">Lado 3:</p></div>
+                        <div class="col-8"><input type="text" id="lado3" class="form-control"></div>
+                    </div>
+                </div>
+                
+                <div class="col-3">
+                    <input type="button" id="calc" value="Calcular" class="btn btn-primary w-100">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-9">
+                    <canvas id="drawzone" width="400" height="300" style="border:1px solid #ccc;"></canvas>
+                </div>
+                <div class="col-3">
+                    <div class="row mb-0 align-items-center">
+                        <p class="m-0">Triángulo: </p><p id="tipo-triangulo"></p>
+                        <p class="m-0">Área: </p><p id="area-triangulo"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>
