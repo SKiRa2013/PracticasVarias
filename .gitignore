@@ -3,6 +3,10 @@
 Thumbs.db
 .vscode/
 .idea/
+redesneu-folder/Include
+redesneu-folder/Lib
+redesneu-folder/Scripts
+redesneu-folder/pyvenv.cfg
 *.swp
 *.tmp
 *.log
