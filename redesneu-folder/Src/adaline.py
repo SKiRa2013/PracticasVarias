@@ -2,7 +2,7 @@ import math
 import numpy as np
 import numpy.typing as npt
 
-class AdelineLayer:
+class AdalineLayer:
     bias: npt.NDArray[np.float16]
     weight: npt.NDArray[np.float16]
     feature_size: int
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         [3, 4]
     ], dtype=np.float16)
 
-    capa = AdelineLayer(input_size = np.shape(entradas)[0], feature_size = np.shape(entradas)[1], learning_constant=0.01, neurons=2)
+    capa = AdalineLayer(input_size = np.shape(entradas)[0], feature_size = np.shape(entradas)[1], learning_constant=0.01, neurons=2)
     capa.set_weight([[1, 2], [2, 0.5], [3, 2]])
     capa.set_bias([[-1, -3], [0.1, 0.2]])
     result = capa.activation(entradas)

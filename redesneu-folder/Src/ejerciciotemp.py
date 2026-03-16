@@ -1,4 +1,4 @@
-from Src.adeline import AdelineLayer
+from Src.adaline import AdalineLayer
 import numpy as np
 
 if __name__ == "__main__":
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     
     # --------------------------------------------------------
     
-    adenalina = AdelineLayer(input_size=np.shape(entradas_norm)[0], feature_size=np.shape(entradas_norm)[1], learning_constant=0.1, neurons=2)
+    adenalina = AdalineLayer(input_size=np.shape(entradas_norm)[0], feature_size=np.shape(entradas_norm)[1], learning_constant=0.1, neurons=2)
     adenalina.set_weight([[0.89, 1.04], [0.51, 0.61]])
     adenalina.set_bias((1 / max_expected) * np.full((15, 2), [273, -10]))
 
