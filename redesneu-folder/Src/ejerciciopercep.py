@@ -1,7 +1,7 @@
 from neuron import Neuron
 import numpy as np
 
-class Ejercicio1:
+class EjercicioPercep:
     def __init__(self):
         self.entrada = np.array([7, 4, 1, 2], dtype=np.float16)
         self.neuron = Neuron(np.shape(self.entrada)[-1])
@@ -10,7 +10,7 @@ class Ejercicio1:
         self.output = self.neuron.output_sign(self.result)
 
 if __name__ == "__main__":
-    ejercicio = Ejercicio1()
+    ejercicio = EjercicioPercep()
     print(f"Entrada: {ejercicio.entrada}")
     print(f"Pesos: {ejercicio.neuron.weight}")
     print(f"Valor de función de activación: {ejercicio.result}")
