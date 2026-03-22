@@ -6,6 +6,7 @@ Este proyecto es un sistema de gestión de estudiantes y facultades desarrollado
 
 1. **Requisitos:** Tener instalado [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 2. **Clonar/Descargar:** Descarga este repositorio en tu máquina.
-3. **Levantar:** Abre una terminal en la carpeta raíz y ejecuta:
+3. **Extraer:** Extrae los contenidos del archivo includes.rar en la carpeta raíz. Debería aparecer una carpeta includes con todos los elementos gráficos requeridos.
+4. **Levantar:** Abre una terminal en la carpeta raíz y ejecuta:
    ```bash
    docker-compose up -d --build
