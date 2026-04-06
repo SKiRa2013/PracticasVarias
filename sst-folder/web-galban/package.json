@@ -1,0 +1,18 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "Web para la clase de Sistemas y Servicios Telemáticos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./public/index.html",
+    "dev": "nodemon ./src/script.js"
+  },
+  "author": "S-KiRa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.2"
+  }
+}

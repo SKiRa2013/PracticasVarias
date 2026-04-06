@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style"
+	onload="this.onload=null;this.rel='stylesheet'">
+
+	<title>GabrielAlban.net</title>
+</head>
+<body class="bg-light">
+  <div class="container my-5">
+	<div class="mb-4">
+		<img src="./Data/zeus.jpg" alt="ZeusImage" class="img-fluid w-75 h-75">
+	</div>
+
+	<div class="text-center mb-4">
+	  <h1 class="fw-bold">Comparativa: Apache vs Nginx</h1>
+	  <p class="text-muted">Diferencias clave entre los servidores web más populares</p>
+	</div>
+
+	<div class="table-responsive shadow-sm rounded">
+	  <table class="table table-striped table-bordered align-middle">
+		<thead class="table-dark text-center">
+		  <tr>
+			<th>Aspecto</th>
+			<th>Apache</th>
+			<th>Nginx</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td><strong>Arquitectura</strong></td>
+			<td>Multiproceso / multihilo, cada conexión usa un proceso o hilo separado.</td>
+			<td>Orientado a eventos, maneja muchas conexiones concurrentes con pocos procesos.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Rendimiento</strong></td>
+			<td>Excelente para contenido dinámico, pero puede consumir más memoria.</td>
+			<td>Rendimiento superior con contenido estático y alta concurrencia.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Contenido dinámico</strong></td>
+			<td>Soporta módulos como <code>mod_php</code> y <code>mod_perl</code>.</td>
+			<td>Requiere un backend (por ejemplo <code>PHP-FPM</code>) para manejar dinámico.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Configuración</strong></td>
+			<td>Permite <code>.htaccess</code> para configurar directorios individuales.</td>
+			<td>No usa <code>.htaccess</code>; configuración centralizada en archivos de servidor.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Uso común</strong></td>
+			<td>Aplicaciones tradicionales (PHP, CMS, hosting compartido).</td>
+			<td>Reverse proxy, balanceador de carga, servidor de contenido estático.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Consumo de recursos</strong></td>
+			<td>Mayor uso de RAM con muchas conexiones simultáneas.</td>
+			<td>Más eficiente en memoria y CPU con cargas elevadas.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Seguridad</strong></td>
+			<td>Maduro, con muchos módulos de seguridad (WAF, mod_security, etc.).</td>
+			<td>Superficie reducida; ideal para actuar como proxy frontal seguro.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Proxy / Balanceo</strong></td>
+			<td>Posible mediante <code>mod_proxy</code>, aunque menos eficiente.</td>
+			<td>Diseñado para proxy reverso y balanceo nativo con gran rendimiento.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Soporte</strong></td>
+			<td>Muy usado en hosting compartido y entornos clásicos.</td>
+			<td>Predominante en arquitecturas modernas, microservicios y cloud.</td>
+		  </tr>
+		  <tr>
+			<td><strong>Escenarios ideales</strong></td>
+			<td>Cuando se necesita compatibilidad con <code>.htaccess</code> o módulos específicos.</td>
+			<td>Frontend de alto rendimiento y balanceo de carga.</td>
+		  </tr>
+		</tbody>
+	  </table>
+	</div>
+
+	<div class="alert alert-info mt-4">
+	  <strong>Nota:</strong> Muchos entornos combinan ambos — Nginx como proxy inverso frontal y Apache como backend para contenido dinámico.
+	</div>
+
+	<footer class="text-center text-muted small mt-3">
+	  &copy; 2025 Comparativa técnica — Apache HTTP Server &amp; Nginx.
+	</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
