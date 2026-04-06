@@ -2,6 +2,8 @@ import math
 import numpy as np
 import numpy.typing as npt
 
+import matplotlib.pyplot as plt
+
 class AdalineLayer:
     bias: npt.NDArray[np.float16]
     weight: npt.NDArray[np.float16]
@@ -9,8 +11,9 @@ class AdalineLayer:
     input_size: int
     neurons: int
     
-    MAX_ITERATIONS: int
+    error_values: list[float]
 
+    MAX_ITERATIONS: int
     learning_constant: float
 
     def __init__(self, input_size: int, feature_size: int, learning_constant: float, neurons: int = 1) -> None:
@@ -23,6 +26,9 @@ class AdalineLayer:
 
         self.weight = np.zeros((feature_size, neurons), dtype=np.float16)
         self.bias = np.zeros((input_size, neurons), dtype=np.float16)
+
+        self.error_values = []
+        
         
     def calculate_result(self, inputs: npt.NDArray, threshold: float, expected_result: npt.NDArray, result: npt.NDArray) -> npt.NDArray:
         print(f"Se procede a la calibración de los pesos con respecto a los valores teóricos deseados:\n{expected_result}\n")
@@ -47,6 +53,8 @@ class AdalineLayer:
             print(f"Nuevo resultado:\n{result}\n")
 
             mse = self.calculate_mse(expected_result, result)
+
+            self.error_values.append(mse)
 
             print(f"Valor de LSM: {mse:.8f} vs Error mínimo: {threshold}\n")
 
@@ -77,9 +85,7 @@ class AdalineLayer:
     
     def calculate_mse(self, expected_result: npt.NDArray, result: npt.NDArray) -> float:
         if np.shape(expected_result) != np.shape(result):
-            print("ay mi madre")
             print(f"{np.shape(expected_result)=} vs {np.shape(result)}")
-
             raise ValueError(f"Los resultados no tienen la misma dimensión")
         
         prom = np.mean(np.square(expected_result - result))
@@ -94,6 +100,16 @@ class AdalineLayer:
             np.transpose(inputs),
             ( self.learning_constant * (expected_result - result) )
         )
+
+    def graphicate(self) -> None:
+        fig, ax = plt.subplots()
+
+        ax.plot([i for i in range(1, len(self.error_values)+1)], self.error_values, color='green', marker='o')
+        ax.set_title('')
+        ax.set_xlabel('Epoch')
+        ax.set_ylabel('Error (%)')
+
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -118,3 +134,8 @@ if __name__ == "__main__":
     print(f"Resultados:\n{result}\n")
     
     capa.calculate_result(entradas, 0.02, expected_result, result)
+
+    gra = input("¿Desea ver la gráfica? (Y/y para ver la gráfica, otra opción para no verla):  >")
+
+    if(gra in ('y', 'Y')):
+        capa.graphicate()
