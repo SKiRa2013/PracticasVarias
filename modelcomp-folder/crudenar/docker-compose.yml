@@ -4,17 +4,13 @@ services:
     container_name: udenar_db_container
     restart: always
     environment:
-      # Esto crea la base de datos si no existe
-      MYSQL_DATABASE: udenar_db
-      # Esto crea el usuario adicional que tú usas
-      MYSQL_USER: udenar_admin
-      MYSQL_PASSWORD: 123udenar
-      # Contraseña del root (obligatoria para el contenedor)
-      MYSQL_ROOT_PASSWORD: root_password 
+      MYSQL_DATABASE: ${database}
+      MYSQL_USER: ${dbuser}
+      MYSQL_PASSWORD: ${dbpass}
+      MYSQL_ROOT_PASSWORD: ${rootpass} 
     ports:
       - "3306:3306"
     volumes:
-      # Al estar la DB ya creada por el YAML, el .sql solo meterá las tablas
       - db_data:/var/lib/mysql
       - ./backups/copia_final.sql:/docker-entrypoint-initdb.d/setup.sql
 
@@ -24,7 +20,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www/html
+      - ./web:/var/www/html
     depends_on:
       - db
 
