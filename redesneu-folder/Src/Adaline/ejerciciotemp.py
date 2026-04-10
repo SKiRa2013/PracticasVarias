@@ -1,4 +1,4 @@
-from Src.adaline import AdalineLayer
+from Src.Adaline.adaline import AdalineLayer
 import numpy as np
 
 if __name__ == "__main__":
