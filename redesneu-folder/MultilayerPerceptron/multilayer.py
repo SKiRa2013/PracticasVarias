@@ -1,4 +1,4 @@
-from Src.MultilayerPerceptron.sigmoid_layer import SigmoidHiddenLayer, SigmoidOutputLayer
+from MultilayerPerceptron.sigmoid_layer import SigmoidHiddenLayer, SigmoidOutputLayer
 import numpy as np
 import numpy.typing as npt
 

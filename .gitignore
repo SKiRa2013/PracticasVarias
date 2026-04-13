@@ -3,6 +3,7 @@
 Thumbs.db
 .vscode/
 .idea/
+.venv/
 redesneu-folder/Include
 redesneu-folder/Lib
 redesneu-folder/Scripts

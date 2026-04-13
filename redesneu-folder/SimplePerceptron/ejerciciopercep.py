@@ -1,4 +1,4 @@
-from Src.SimplePerceptron.neuron import Neuron
+from SimplePerceptron.neuron import Neuron
 import numpy as np
 
 class EjercicioPercep:

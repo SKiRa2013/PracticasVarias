@@ -1,4 +1,4 @@
-from Src.Adaline.adaline import AdalineLayer
+from Adaline.adaline import AdalineLayer
 
 import numpy as np
 import numpy.typing as npt
