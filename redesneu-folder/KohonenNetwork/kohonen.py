@@ -32,7 +32,7 @@ class Kohonen(PerceptronLayer):
         self.vicinity_factor = vicinity_factor
 
 
-    def euclidean_distance(self, matrix_a: npt.NDArray[np.float16], matrix_b: npt.ArrayLike[np.float16]) -> float:
+    def euclidean_distance(self, matrix_a: npt.NDArray[np.float16], matrix_b: npt.NDArray[np.float16]) -> float:
         return np.linalg.norm(matrix_a - matrix_b, axis=1)
 
     def manhattan_distance(self, pos_a: npt.NDArray[np.intp], pos_b: npt.NDArray[np.intp]) -> float:
