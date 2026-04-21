@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b_b2^)0ss=t+b#s7x%8764rydjd_(quh^(-=$q9%8_*fui!1@b'
+SECRET_KEY = 'django-insecure-b_b2^)0ss=t+0337187b#s7x%8764rydjd_(quh^(-=$q9%8_*fui!1@b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'neural',
+    'apps.neuralapi',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'neuralapi.urls'
+ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'neuralapi.wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
 
 # Database

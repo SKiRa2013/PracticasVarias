@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class NeuralConfig(AppConfig):
-    name = 'neural'
+    name = 'apps.neuralapi'
+    label = 'neuralapi'

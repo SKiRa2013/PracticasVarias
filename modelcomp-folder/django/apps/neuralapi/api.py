@@ -1,6 +1,6 @@
-from redesneu.hopfield import Hopfield
-from neural.models import HopfieldMachine, HopfieldExercise
-from neural.serializers import MachineSerializer, ExerciseSerializer
+from library.redesneu.hopfield import Hopfield
+from apps.neuralapi.models import HopfieldMachine, HopfieldExercise
+from apps.neuralapi.serializers import MachineSerializer, ExerciseSerializer
 from rest_framework import viewsets, permissions
 
 from django.core.files.base import ContentFile

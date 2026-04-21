@@ -2,7 +2,7 @@ import numpy as np
 import numpy.typing as npt
 import matplotlib.pyplot as plt
 
-from redesneu.perceptron import PerceptronLayer
+from library.redesneu.perceptron import PerceptronLayer
 
 class Hopfield(PerceptronLayer):   
     def __init__(self, inputs: npt.NDArray[np.float16]):

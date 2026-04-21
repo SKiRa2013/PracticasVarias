@@ -1,5 +1,5 @@
-from neural.models import HopfieldExercise, HopfieldMachine
-from redesneu.hopfield import Hopfield
+from apps.neuralapi.models import HopfieldExercise, HopfieldMachine
+from library.redesneu.hopfield import Hopfield
 from rest_framework import serializers
 import numpy as np
 import io

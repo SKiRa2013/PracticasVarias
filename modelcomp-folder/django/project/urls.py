@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('neural.urls')),
+    path('', include('apps.neuralapi.urls')),
 ]
 
 if settings.DEBUG:

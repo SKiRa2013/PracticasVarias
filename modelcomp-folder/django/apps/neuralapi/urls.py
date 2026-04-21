@@ -1,4 +1,4 @@
-from neural.api import MachineViewSet, ExerciseViewSet
+from apps.neuralapi.api import MachineViewSet, ExerciseViewSet
 
 from rest_framework import routers
 
