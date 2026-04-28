@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 # Register your models here.
 from apps.neuralapi.models import HopfieldMachine, HopfieldExercise
@@ -6,13 +7,45 @@ from apps.neuralapi.models import HopfieldMachine, HopfieldExercise
 import numpy as np
 import io
 
-# Registro simple
+class HopfieldMachineAdminForm(forms.ModelForm):
+    training_data = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 5,
+            'placeholder': 'Ej: [[1.0, 1.0], [-1.0, 1.0]]'
+        }),
+        required=True,
+        label="Datos de Entrenamiento",
+        help_text="Pega aquí tu matriz de datos de entrenamiento (usa np.flatten)"
+    )
+
+    class Meta:
+        model = HopfieldMachine
+        fields = '__all__'
+
+class HopfieldExerciseAdminForm(forms.ModelForm):
+    input_data = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 5,
+            'placeholder': 'Ej: [[1.0, 1.0], [-1.0, 1.0]]'
+        }),
+        required=True,
+        label="Datos de Entrada",
+        help_text="Pega aquí tu matriz de datos de entrada (usa np.flatten)"
+    )
+
+    class Meta:
+        model = HopfieldExercise
+        fields = '__all__'
+
 @admin.register(HopfieldMachine)
 class HopfieldMachineAdmin(admin.ModelAdmin):
+    form = HopfieldMachineAdminForm
+    
     list_display = ('id', 'name', 'display_weights', 'dims', 'created_at')
     # list_filter = ()
+    fields = ('name', 'training_data')
 
-    readonly_fields = ('display_weights',)
+    readonly_fields = ('display_weights', 'dims', 'created_at', )
     
     def display_weights(self, obj):
         if not obj.weights:
@@ -33,8 +66,14 @@ class HopfieldMachineAdmin(admin.ModelAdmin):
     # Le damos un nombre bonito a la columna en el Admin
     display_weights.short_description = "weights"
 
-# Registro un poco más avanzado para ver más columnas
+
 @admin.register(HopfieldExercise)
 class HopfieldExerciseAdmin(admin.ModelAdmin):
+    form = HopfieldExerciseAdminForm
+
     list_display = ('id', 'machine', 'is_convergent', 'epochs', 'inputs', 'result', 'image')
     # list_filter = ('is_convergent', 'machine')
+
+    fields = ('machine', 'input_data')
+
+    readonly_fields = ('is_convergent', 'epochs', 'result', 'image')

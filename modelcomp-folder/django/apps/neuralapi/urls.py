@@ -4,7 +4,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-router.register('api/machines', MachineViewSet, 'machines')
-router.register('api/exercises', ExerciseViewSet, 'exercises')
+router.register('neural/machines', MachineViewSet, 'machines')
+router.register('neural/exercises', ExerciseViewSet, 'exercises')
 
 urlpatterns = router.urls

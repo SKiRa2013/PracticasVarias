@@ -13,7 +13,7 @@ class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model = HopfieldMachine
         fields = ('id', 'name', 'dims', 'training_data', 'created_at')
-        read_only_fields = ('created_at',)
+        read_only_fields = ('created_at', 'dims', 'created_at')
 
     def create(self, validated_data):
         patterns = np.array(validated_data.pop('training_data'))
@@ -31,7 +31,12 @@ class MachineSerializer(serializers.ModelSerializer):
         )   
 
 class ExerciseSerializer(serializers.ModelSerializer):
+    input_data = serializers.ListField(
+        child=serializers.ListField(child=serializers.FloatField()),
+        write_only=True
+    )
+    
     class Meta:
         model = HopfieldExercise
-        fields = ('id', 'machine', 'inputs', 'result', 'is_convergent', 'epochs', 'image')
-        read_only_fields = ()
+        fields = ('id', 'machine', 'input_data', 'result', 'is_convergent', 'epochs', 'image')
+        read_only_fields = ('result', 'is_convergent', 'epochs', 'image',)
