@@ -17,7 +17,7 @@ class MachineSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         patterns = np.array(validated_data.pop('training_data'))
-        validated_data.pop('dims')
+        # validated_data.pop('dims')
         
         machine = Hopfield(inputs=patterns)
 
@@ -31,12 +31,12 @@ class MachineSerializer(serializers.ModelSerializer):
         )   
 
 class ExerciseSerializer(serializers.ModelSerializer):
-    input_data = serializers.ListField(
+    inputs = serializers.ListField(
         child=serializers.ListField(child=serializers.FloatField()),
         write_only=True
     )
     
     class Meta:
         model = HopfieldExercise
-        fields = ('id', 'machine', 'input_data', 'result', 'is_convergent', 'epochs', 'image')
+        fields = ('id', 'machine', 'inputs', 'result', 'is_convergent', 'epochs', 'image')
         read_only_fields = ('result', 'is_convergent', 'epochs', 'image',)

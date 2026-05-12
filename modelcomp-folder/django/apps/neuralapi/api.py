@@ -68,6 +68,8 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         img_buffer = graphicate(machine, inputs, result, epoch)
 
         instance = serializer.save(
+            machine=machine,
+            inputs=inputs.tolist(),
             result=result.tolist(),
             is_convergent=convergence,
             epochs=epoch,
