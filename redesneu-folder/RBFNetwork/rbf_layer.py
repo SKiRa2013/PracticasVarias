@@ -25,15 +25,14 @@ class RBFLayer(SigmoidLayer):
         
         self.sigma = d_max / np.sqrt(2 * self.neurons)
         
-        # Evitar división por cero si d_max es 0
-        if self.sigma == 0:
+        # Evitar división por cero si d_max es 0 o se aproxima
+        if -1e-06 < self.sigma < 1e-06:
             self.sigma = 1.0
 
     def activation(self, inputs: npt.NDArray[np.float16]) -> npt.NDArray[np.float16]:
         # En RBF, calculamos la distancia euclidiana: ||x - c||^2
         # Usamos broadcasting para restar cada entrada de cada centro
         dist = np.linalg.norm(inputs[:, np.newaxis, :] - self.weight.T, axis=2)
-        
         return np.exp(-(np.square(dist)) / (2 * (self.sigma**2)))
 
     def delta_output(self, error, result):

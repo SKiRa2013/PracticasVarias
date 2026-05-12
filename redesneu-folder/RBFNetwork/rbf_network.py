@@ -9,13 +9,13 @@ import numpy.typing as npt
 
 class RBFNetwork(MLPerceptron):
     def __init__(self, input_size: int, feature_size: int, neurons_rbf: int):
-        super().__init__(input_size, feature_size, 0, neurons_rbf, hidden_layers=0)
+        super().__init__(input_size, feature_size, 0, neurons_rbf, 0)
 
     def initialize_perceptron(self):
         """
         Sobreescribimos la inicialización para asegurar la estructura RBF:
         1. Una capa RBF (oculta)
-        2. Una capa de salida (Adaline o Sigmoide)
+        2. Una capa de salida
         """
         # Capa 1: RBF
         self.layers.append(RBFLayer(
@@ -32,9 +32,17 @@ class RBFNetwork(MLPerceptron):
             self.input_size
         ))
 
-    def calculate_result(self, inputs: npt.NDArray, expected: npt.NDArray, max_iterations: int) -> npt.NDArray[np.float16]:
+    def calculate_result(self, inputs: npt.NDArray, expected: npt.NDArray, max_iterations: int) -> tuple[npt.NDArray[np.float16], list, int]:
         hidden_layer: RBFLayer = self.layers[0]
         output_layer: RBFOutputLayer = self.layers[1]
+
+        # Inicializamos los pesos de la capa oculta con datos reales
+        indices_aleatorios = np.random.choice(inputs.shape[0], hidden_layer.neurons, replace=False)
+        hidden_layer.weight = inputs[indices_aleatorios].T.copy()
+
+        # Guardaremos una "foto" de la reconstrucción aquí
+        historia_reconstruccion = []
+        historia_reconstruccion.append(np.copy(hidden_layer.weight.T))
 
         for epoch in range(1, max_iterations + 1):
             # Centroides finales (k-means), también detecta si se mantuvieron igual
@@ -46,57 +54,69 @@ class RBFNetwork(MLPerceptron):
             # Generamos la matriz de pseudomuestras
             g_matrix = hidden_layer.activation(inputs)
             output_layer.solve_pseudo_inverse(g_matrix, expected)
+
+            # --- CAPTURA DE ÉPOCA ---
+            # Guardamos la predicción actual para los índices elegidos
+            historia_reconstruccion.append(np.copy(hidden_layer.weight.T))
             
             # Evaluar si los centroides se mantuvieron igual
             result = output_layer.activation(g_matrix)
+            # result = self.forward(g_matrix)
             
             if not updated_centers:
                 print(f"Convergió por centros y pesos en epoch {epoch}.")
-                return result
+                return result, historia_reconstruccion, epoch
 
-        print(result)
-        raise RuntimeError(f"Se alcanzó el número máximo de epochs: {max_iterations}")
+        print(f"¡ALERTA! Se alcanzó el número máximo de epochs: {max_iterations}")
+        return result, historia_reconstruccion, max_iterations
+
+
+
+def graficar_evolucion(historia, img_size, pasos=5):
+    """
+    Orientación:
+    - Filas: Momentos en el tiempo (Épocas)
+    - Columnas: Neuronas (Prototipos)
+    """
+    total_pasos = len(historia)
+    n_neuronas = historia[0].shape[0]
     
-    def graphicate(self, img_size: tuple[int, int]):
-        # Accedemos a la capa RBF (la primera)
-        rbf_layer = self.layers[0]
-        neurons = rbf_layer.neurons
+    # Seleccionamos los índices de las épocas
+    pasos_idx = np.linspace(0, total_pasos - 1, pasos, dtype=int)
+    
+    # Invertimos: Filas = Épocas, Columnas = Neuronas
+    fig, axes = plt.subplots(pasos, n_neuronas, 
+                             figsize=(n_neuronas * 2.5, pasos * 3))
+    
+    # Asegurar que axes sea siempre 2D (caso de una sola neurona o época)
+    if pasos == 1: axes = np.expand_dims(axes, axis=0)
+    if n_neuronas == 1: axes = np.expand_dims(axes, axis=1)
+
+    for row_idx, p_idx in enumerate(pasos_idx):
+        pesos_epoca = historia[p_idx]
         
-        # Determinar la geometría de la rejilla (cuadrada o lo más cercana posible)
-        side = int(np.ceil(np.sqrt(neurons)))
-        rows, cols = side, side 
-
-        fig, axes = plt.subplots(rows, cols, figsize=(12, 12))
-        axes_flat = axes.flatten()
-
-        # Los centros están en rbf_layer.weight (feature_size, neurons)
-        # Transponemos para iterar por cada centroide (imagen)
-        centros_imagenes = rbf_layer.weight.T 
-
-        for i in range(neurons):
-            ax = axes_flat[i]
-            try:
-                # Reconstrucción RGB: (alto, ancho, 3)
-                # weight[i] tiene tamaño 8112
-                imagen_neurona = centros_imagenes[i].reshape((img_size[1], img_size[0], 3))
-                
-                # Clipping para asegurar que los colores sean válidos [0, 1]
-                imagen_visual = np.clip(imagen_neurona.astype(np.float32), 0, 1)
-                
-                ax.imshow(imagen_visual)
-                ax.set_title(f"Centro {i+1}", fontsize=8)
-            except Exception as e:
-                pass
+        for col_idx in range(n_neuronas):
+            ax = axes[row_idx, col_idx]
+            
+            # Reconstruir imagen del peso (centroide)
+            img = pesos_epoca[col_idx].reshape(img_size[1], img_size[0], 3)
+            
+            # Mostrar imagen
+            ax.imshow(np.clip(img.astype(np.float32), 0, 1))
+            
+            # Etiqueta de Época solo en la primera columna
+            if col_idx == 0:
+                ax.set_ylabel(f"Época {row_idx}", fontsize=12, fontweight='bold')
+            
+            # Etiqueta de Neurona solo en la primera fila
+            if row_idx == 0:
+                ax.set_title(f"Neurona {col_idx}", fontsize=10)
+            
             ax.axis('off')
 
-        # Limpiar subplots vacíos
-        for j in range(i + 1, len(axes_flat)):
-            axes_flat[j].axis('off')
-
-        plt.subplots_adjust(wspace=0.1, hspace=0.3)
-        plt.suptitle("RBF Network: Visualización de Centros (Prototipos de Imágenes)")
-        plt.show()
-
+    plt.tight_layout()
+    plt.suptitle("Evolución Temporal de los Prototipos RBF (Vertical)", fontsize=16, y=0.96)
+    plt.show()
 
 if __name__ == "__main__":
     personajes = {
@@ -123,41 +143,35 @@ if __name__ == "__main__":
         # Aplanamos y normalizamos a [0, 1]
         imagenes_norm[clave] = (1/255.0) * np.array(img).flatten().astype(np.float16)
     
-    # 2. Crear el dataset (Misma lógica que usaste en SOM)
+    # 2. Crear el dataset
+    dataset_limpio = []
+    dataset_ruidoso = []
     total_muestras = 100
-    dataset = []
-    for i in range(1, total_muestras + 1):
-        if i % 3 == 0:
-            dataset.append(imagenes_norm["max"])
-        elif i % 4 == 0:
-            dataset.append(imagenes_norm["duke"])
-        elif i % 5 == 0:
-            dataset.append(imagenes_norm["doomguy"])
-        else:
-            dataset.append(imagenes_norm["blazkowicz"])
 
-    input_matrix = np.array(dataset)
-    # Para una RBF autoasociativa, la salida esperada es la misma entrada
-    expected_output = input_matrix 
+    for i in range(total_muestras):
+        # Elegir un personaje al azar
+        claves = list(imagenes_norm.keys())
+        seleccion = np.random.choice(claves)
+        p = imagenes_norm[seleccion]
+        dataset_limpio.append(p)
+        
+        # Crear "Pseudomuestra": Imagen + Ruido Gaussiano
+        ruido = np.random.normal(0, 0.3, p.shape).astype(np.float16)
+        dataset_ruidoso.append(np.clip(p + ruido, 0, 1))
 
-    print(f"Dataset de imágenes listo: {input_matrix.shape}") # (100, 8112)
+    X = np.array(dataset_ruidoso)
+    Y = np.array(dataset_limpio) # La red debe aprender a limpiar el ruido
 
     # 3. Inicializar RBF
-    # Usaremos, por ejemplo, 16 neuronas para ver 16 "versiones" o prototipos
     red_rbf = RBFNetwork(
-        input_size=total_muestras, 
-        feature_size=feature_size, 
-        neurons_rbf=16
+        input_size=total_muestras,
+        feature_size=feature_size,
+        neurons_rbf=5,
     )
 
     # 4. Entrenar
-    # Aquí los centros se moverán hacia Doomguy, Duke y Max
-    # y la pseudoinversa aprenderá a reconstruirlos.
-    red_rbf.calculate_result(
-        input_matrix, 
-        expected_output, 
-        max_iterations=100
-    )
+    result, story, epoch = red_rbf.calculate_result(X, Y, max_iterations=100)
 
-    # 5. Graficar los centros (Lo que la red "cree" que son las imágenes base)
-    red_rbf.graphicate(size_comun)
+    # 5. Graficar
+    graficar_evolucion(story, img_size=size_comun, pasos=min(epoch, 5))
+    
