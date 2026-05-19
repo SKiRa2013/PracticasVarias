@@ -1,0 +1,69 @@
+<div class="row">
+  <!-- Formulario de Evaluación -->
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-dark text-white fw-bold">Probar Patrón (Recuperación)</div>
+      <div class="card-body">
+        <form [formGroup]="exerciseForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-secondary">Seleccionar Máquina</label>
+            <select formControlName="machine" class="form-select">
+              <option value="" disabled selected>Elige una red...</option>
+              <option *ngFor="let m of machines" [value]="m.id">{{ m.name }} ({{ m.dims }} n)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-secondary">Vector de Entrada (Ruido)</label>
+            <textarea formControlName="inputs" class="form-control font-monospace small" rows="4" placeholder="[[1, -1, 1], [-1, 1, -1], [1, 1, -1]]"></textarea>
+            <div class="form-text small">La cantidad de elementos debe coincidir con las neuronas de la máquina.</div>
+          </div>
+          <button type="submit" [disabled]="exerciseForm.invalid" class="btn btn-primary w-100">
+            <i class="bi bi-cpu me-1"></i>Procesar Entrada
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listado de Resultados y Gráficos -->
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white fw-bold text-dark">Historial de Simulaciones</div>
+      <div class="card-body p-0">
+        <div *ngFor="let ex of exercises" class="border-bottom p-3">
+          <div class="row align-items-center">
+            <!-- Datos técnicos del ejercicio -->
+            <div class="col-sm-6">
+              <h6 class="fw-bold mb-1">Ejercicio #{{ ex.id }} - Máquina #{{ ex.machine }}</h6>
+              <p class="text-muted small mb-2">Evaluado el: {{ ex.created_at | date:'short' }}</p>
+              <div class="mb-2">
+                <span class="badge me-1" [ngClass]="ex.is_convergent ? 'bg-success' : 'bg-danger'">
+                  {{ ex.is_convergent ? 'Convergió' : 'Bucle / Oscilación' }}
+                </span>
+                <span class="badge bg-info text-dark">{{ ex.epochs }} Épocas</span>
+              </div>
+            </div>
+            <!-- Renderización del gráfico de Matplotlib -->
+            <div class="col-sm-5 text-center">
+              <div *ngIf="ex.image; else noImg" class="bg-light p-1 border rounded">
+                <img [src]="baseUrl + ex.image" alt="Resultado Hopfield" class="img-fluid rounded" style="max-height: 120px;">
+              </div>
+              <ng-template #noImg>
+                <span class="text-muted small italic">Sin imagen generada</span>
+              </ng-template>
+            </div>
+            <!-- Botón de borrado -->
+            <div class="col-sm-1 text-end">
+              <button (click)="deleteExercise(ex.id)" class="btn btn-link text-danger p-0">
+                <i class="bi bi-trash fs-5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="exercises.length === 0" class="text-center text-muted py-5">
+          No se ha ejecutado ninguna prueba de patrones todavía.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

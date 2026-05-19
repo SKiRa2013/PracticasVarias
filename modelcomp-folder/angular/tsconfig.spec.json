@@ -3,13 +3,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": ".",
-    "types": []
+    "outDir": "./out-tsc/app",
+    "rootDir": "./src",
+    "types": [
+      "vitest/globals"
+    ],
   },
   "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
+    "src/**/*.d.ts",
     "src/**/*.spec.ts"
   ]
 }

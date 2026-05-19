@@ -1,0 +1,61 @@
+<div class="row">
+  <!-- Formulario de Creación -->
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-dark text-white fw-bold">Entrenar Nueva Máquina</div>
+      <div class="card-body">
+        <form [formGroup]="machineForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-secondary">Nombre de la Red</label>
+            <input type="text" formControlName="name" class="form-control" placeholder="Ej: Letras Z y N">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-secondary">Dimensiones (Neuronas)</label>
+            <input type="number" formControlName="dims" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-secondary">Datos de Entrenamiento (JSON)</label>
+            <textarea formControlName="training_data" class="form-control font-monospace small" rows="5" placeholder="[[1, -1, 1], [-1, 1, -1]]"></textarea>
+          </div>
+          <button type="submit" [disabled]="machineForm.invalid" class="btn btn-success w-100">
+            <i class="bi bi-play-fill me-1"></i>Entrenar y Guardar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Listado -->
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white fw-bold text-dark">Máquinas Disponibles</div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Dimensiones</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of machines">
+              <td class="fw-bold">#{{ m.id }}</td>
+              <td>{{ m.name }}</td>
+              <td><span class="badge bg-secondary">{{ m.dims }} neuronas</span></td>
+              <td class="text-center">
+                <button (click)="deleteMachine(m.id)" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="machines.length === 0">
+              <td colspan="4" class="text-center text-muted py-4">No hay máquinas registradas en el sistema.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
