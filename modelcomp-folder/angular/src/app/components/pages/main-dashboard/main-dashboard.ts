@@ -1,29 +1,108 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HopfieldService } from '../../../services/hopfield';
-import { RouterLink } from '@angular/router';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  RouterLink,
+  Router,
+  NavigationEnd
+} from '@angular/router';
+
+import {
+  filter,
+  forkJoin
+} from 'rxjs';
+
+import {
+  HopfieldService
+} from '../../../services/hopfield';
 
 @Component({
   selector: 'app-main-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLink
+  ],
   templateUrl: './main-dashboard.html'
 })
-export class MainDashboardComponent implements OnInit {
-  machines: any[] = [];
-  exercises: any[] = [];
-  apiUrl = 'http://localhost:8000/api';
+export class MainDashboardComponent
+  implements OnInit {
 
-  constructor(private hopfieldService: HopfieldService) {}
+  machinesWithExercises: any[] = [];
 
-  ngOnInit() {
-    // Cargamos en paralelo máquinas y ejercicios para cruzarlos en el cliente
-    this.hopfieldService.getMachines().subscribe(m => this.machines = m);
-    this.hopfieldService.getExercises().subscribe(e => this.exercises = e);
+  loading = false;
+  error = false;
+
+  constructor(
+    private hopfieldService: HopfieldService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.loadDashboard();
   }
 
-  // Filtra los ejercicios que pertenecen a una máquina específica
-  getExercisesForMachine(machineId: number) {
-    return this.exercises.filter(ex => ex.machine === machineId);
+  loadDashboard(): void {
+
+    this.loading = true;
+    this.error = false;
+
+    forkJoin({
+
+      machines:
+        this.hopfieldService.getMachines(),
+
+      exercises:
+        this.hopfieldService.getExercises()
+
+    }).subscribe({
+
+      next: (result) => {
+
+        this.machinesWithExercises =
+          result.machines.map(
+            (machine: any) => {
+
+              const ejerciciosFiltrados =
+                result.exercises.filter(
+                  (ex: any) =>
+                    ex.machine === machine.id
+                );
+
+              return {
+
+                ...machine,
+
+                ejerciciosFiltrados
+
+              };
+
+            }
+          );
+
+
+        this.loading = false;
+
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        this.loading = false;
+        this.error = true;
+
+      }
+
+    });
+
   }
+
 }

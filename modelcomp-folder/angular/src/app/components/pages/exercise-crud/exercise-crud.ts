@@ -1,68 +1,235 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HopfieldService } from '../../../services/hopfield';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
+import {
+  HopfieldService
+} from '../../../services/hopfield';
 
 @Component({
   selector: 'app-exercise-crud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './exercise-crud.html'
 })
 export class ExerciseCrudComponent implements OnInit {
-  exercises: any[] = [];
-  machines: any[] = []; // Necesarias para el selector <select>
-  exerciseForm: FormGroup;
-  apiUrl = 'http://localhost:8000/api/exercises/';
-  baseUrl = 'http://localhost:8000'; // Raíz para las imágenes de Django
 
-  constructor(private hopfieldService: HopfieldService, private fb: FormBuilder) {
+  exercises: any[] = [];
+  machines: any[] = [];
+
+  exerciseForm: FormGroup;
+
+  loading = false;
+  loadingTable = false;
+  error = false;
+
+  constructor(
+    private hopfieldService: HopfieldService,
+    private fb: FormBuilder
+  ) {
+
     this.exerciseForm = this.fb.group({
-      machine: ['', Validators.required],
-      inputs: ['', Validators.required]
+
+      machine: [
+        '',
+        Validators.required
+      ],
+
+      inputs: [
+        '',
+        Validators.required
+      ]
+
     });
+
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.refreshData();
+  }
+
+  refreshData(): void {
+
     this.loadExercises();
     this.loadMachines();
+
   }
 
-  loadExercises() {
-    this.hopfieldService.getExercises().subscribe(data => this.exercises = data);
+  loadExercises(): void {
+
+    this.loadingTable = true;
+    this.error = false;
+
+    this.hopfieldService
+      .getExercises()
+      .subscribe({
+
+        next: (data) => {
+
+          this.exercises = data;
+
+          this.loadingTable = false;
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          this.loadingTable = false;
+          this.error = true;
+
+        }
+
+      });
+
   }
 
-  loadMachines() {
-    this.hopfieldService.getMachines().subscribe(data => this.machines = data);
+  loadMachines(): void {
+
+    this.hopfieldService
+      .getMachines()
+      .subscribe({
+
+        next: (data) => {
+
+          this.machines = data;
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+        }
+
+      });
+
   }
 
-  onSubmit() {
-    if (this.exerciseForm.invalid) return;
+  onSubmit(): void {
+
+    if (this.exerciseForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
 
     const formData = this.exerciseForm.value;
+
     try {
-      const parsedInputs = JSON.parse(formData.inputs);
+
+      const parsedInputs =
+        JSON.parse(formData.inputs);
+
       const payload = {
+
         machine: parseInt(formData.machine),
+
         inputs: parsedInputs
+
       };
 
-      this.hopfieldService.createExercise(payload).subscribe({
-        next: () => {
-          this.loadExercises();
-          this.exerciseForm.reset();
-          alert('¡Simulación completada con éxito!');
-        },
-        error: (err) => alert('Error en la red: ' + JSON.stringify(err.error))
-      });
+      this.hopfieldService
+        .createExercise(payload)
+        .subscribe({
+
+          next: () => {
+
+            // Recargar historial
+            this.loadExercises();
+
+            // Reset limpio
+            this.exerciseForm.reset({
+
+              machine: '',
+              inputs: ''
+
+            });
+
+            this.loading = false;
+
+            alert(
+              '¡Simulación completada!'
+            );
+
+          },
+
+          error: (err) => {
+
+            console.error(err);
+
+            this.loading = false;
+
+            alert(
+              'Error en backend: ' +
+              JSON.stringify(err.error)
+            );
+
+          }
+
+        });
+
     } catch (e) {
-      alert('Error en el input: Debe ser un array JSON de números. Ej: [[1, -1, 1], [-1, 1, -1], [1, 1, -1]]');
+
+      this.loading = false;
+
+      alert(
+        'JSON inválido en inputs.'
+      );
+
     }
+
   }
 
-  deleteExercise(id: number) {
-    if (confirm('¿Deseas eliminar el registro de este ejercicio?')) {
-      this.hopfieldService.deleteExercise(id).subscribe(() => this.loadExercises());
+  deleteExercise(id: number): void {
+
+    const confirmed =
+      confirm(
+        '¿Deseas eliminar este ejercicio?'
+      );
+
+    if (!confirmed) {
+      return;
     }
+
+    this.hopfieldService
+      .deleteExercise(id)
+      .subscribe({
+
+        next: () => {
+
+          this.loadExercises();
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert(
+            'No se pudo eliminar.'
+          );
+
+        }
+
+      });
+
   }
+
 }
