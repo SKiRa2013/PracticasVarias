@@ -1,108 +1,30 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  RouterLink,
-  Router,
-  NavigationEnd
-} from '@angular/router';
-
-import {
-  filter,
-  forkJoin
-} from 'rxjs';
-
-import {
-  HopfieldService
-} from '../../../services/hopfield';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-main-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink
-  ],
+  imports: [CommonModule, RouterLink],
   templateUrl: './main-dashboard.html'
 })
-export class MainDashboardComponent
-  implements OnInit {
-
+export class MainDashboardComponent implements OnInit {
+  // Esta es la variable que tu HTML está esperando
   machinesWithExercises: any[] = [];
 
-  loading = false;
-  error = false;
+  constructor(private route: ActivatedRoute) {}
 
-  constructor(
-    private hopfieldService: HopfieldService,
-    private router: Router
-  ) { }
-
-  ngOnInit(): void {
-    this.loadDashboard();
+  ngOnInit() {
+    this.route.data.subscribe(({ data }) => {
+    if (data && data.machines && data.exercises) {
+      this.machinesWithExercises = data.machines.map((machine: any) => ({
+        ...machine,
+        ejerciciosFiltrados: data.exercises.filter((ex: any) => ex.machine === machine.id)
+      }));
+      console.log("Datos cargados y combinados:", this.machinesWithExercises);
+    } else {
+      console.error("Los datos recibidos en el componente están incompletos o vacíos:", data);
+    }
+  });
   }
-
-  loadDashboard(): void {
-
-    this.loading = true;
-    this.error = false;
-
-    forkJoin({
-
-      machines:
-        this.hopfieldService.getMachines(),
-
-      exercises:
-        this.hopfieldService.getExercises()
-
-    }).subscribe({
-
-      next: (result) => {
-
-        this.machinesWithExercises =
-          result.machines.map(
-            (machine: any) => {
-
-              const ejerciciosFiltrados =
-                result.exercises.filter(
-                  (ex: any) =>
-                    ex.machine === machine.id
-                );
-
-              return {
-
-                ...machine,
-
-                ejerciciosFiltrados
-
-              };
-
-            }
-          );
-
-
-        this.loading = false;
-
-
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        this.loading = false;
-        this.error = true;
-
-      }
-
-    });
-
-  }
-
 }

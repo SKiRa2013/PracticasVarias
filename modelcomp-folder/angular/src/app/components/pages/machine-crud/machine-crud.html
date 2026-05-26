@@ -2,23 +2,16 @@
 
   <!-- FORMULARIO -->
   <div class="col-md-4 mb-4">
-
     <div class="card shadow-sm border-0">
-
       <div class="card-header bg-dark text-white fw-bold">
         Entrenar Nueva Máquina
       </div>
 
       <div class="card-body">
-
-        <form
-          [formGroup]="machineForm"
-          (ngSubmit)="onSubmit()"
-        >
+        <form [formGroup]="machineForm" (ngSubmit)="onSubmit()">
 
           <!-- NOMBRE -->
           <div class="mb-3">
-
             <label class="form-label small fw-bold text-secondary">
               Nombre de la Red
             </label>
@@ -29,12 +22,10 @@
               class="form-control"
               placeholder="Ej: Letras Z y N"
             >
-
           </div>
 
           <!-- DIMS -->
           <div class="mb-3">
-
             <label class="form-label small fw-bold text-secondary">
               Dimensiones
             </label>
@@ -44,24 +35,18 @@
               formControlName="dims"
               class="form-control"
             >
-
           </div>
 
           <!-- TRAINING DATA -->
           <div class="mb-3">
-
             <label class="form-label small fw-bold text-secondary">
-              Datos de Entrenamiento (JSON)
+              Datos de Entrenamiento (subir imagen en blanco y negro)
             </label>
 
-            <textarea
-              formControlName="training_data"
-              class="form-control font-monospace small"
-              rows="6"
-              placeholder='[[1, -1, 1], [-1, 1, -1]]'
-            ></textarea>
-
+            <input type="file" (change)="onFileSelected($event)" class="form-control" accept="image/*">
           </div>
+
+          <canvas #imageCanvas style="display: none;"></canvas>
 
           <!-- BOTÓN -->
           <button
@@ -69,7 +54,6 @@
             class="btn btn-success w-100"
             [disabled]="machineForm.invalid || loading"
           >
-
             <span *ngIf="!loading">
               <i class="bi bi-play-fill me-1"></i>
               Entrenar y Guardar
@@ -79,26 +63,17 @@
               <span class="spinner-border spinner-border-sm me-2"></span>
               Guardando...
             </span>
-
           </button>
 
         </form>
-
       </div>
-
     </div>
-
   </div>
 
   <!-- TABLA -->
   <div class="col-md-8">
 
     <div class="card shadow-sm border-0">
-
-      <div class="card-header bg-white fw-bold text-dark">
-        Máquinas Disponibles {{ machines.length }}
-      </div>
-
       <!-- ERROR -->
       <div
         *ngIf="error"

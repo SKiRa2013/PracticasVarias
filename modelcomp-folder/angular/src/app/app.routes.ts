@@ -4,15 +4,31 @@ import { MainDashboardComponent } from './components/pages/main-dashboard/main-d
 import { MachineCrudComponent } from './components/pages/machine-crud/machine-crud';
 import { ExerciseCrudComponent } from './components/pages/exercise-crud/exercise-crud';
 
+import { MainDashboardResolver } from './components/pages/main-dashboard/main-dashboard.resolver';
+import { MachineResolver } from './components/pages/machine-crud/machine-crud.resolve';
+import { ExerciseResolver } from './components/pages/exercise-crud/exercise-crud.resolve';
+
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: MainDashboardComponent },
-      { path: 'machines', component: MachineCrudComponent },
-      { path: 'exercises', component: ExerciseCrudComponent }
+      { 
+        path: 'dashboard',
+        component: MainDashboardComponent,
+        resolve: { data: MainDashboardResolver },
+      },
+      { 
+        path: 'machines',
+        component: MachineCrudComponent,
+        resolve: { data: MachineResolver }
+      },
+      { 
+        path: 'exercises',
+        component: ExerciseCrudComponent,
+        resolve: { data: ExerciseResolver }
+      }
     ]
   },
   { path: '**', redirectTo: 'dashboard' },

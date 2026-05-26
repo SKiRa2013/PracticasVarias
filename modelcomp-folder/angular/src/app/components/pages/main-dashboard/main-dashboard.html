@@ -1,185 +1,53 @@
 <div class="row mb-4">
-
   <div class="col">
-
-    <h2 class="fw-semibold">
-      Panel de Control
-    </h2>
-
-    <p class="text-muted">
-      Resumen del estado actual
-      de tus redes neuronales.
-    </p>
-
+    <h2 class="fw-semibold"> Panel de Control </h2>
+    <p class="text-muted"> Resumen del estado actual de tus redes neuronales. </p>
   </div>
-
 </div>
 
-<!-- LOADING -->
-<div
-  *ngIf="loading"
-  class="text-center p-5"
->
-
-  <div class="spinner-border text-primary mb-3"></div>
-
-  <p class="text-muted">
-    Cargando dashboard...
-  </p>
-
-</div>
-
-<!-- ERROR -->
-<div
-  *ngIf="error"
-  class="alert alert-danger"
->
-
-  Error cargando datos desde el servidor.
-
-</div>
-
-<!-- CONTENIDO -->
-<div
-  class="row"
-  *ngIf="!loading && !error"
->
-
-  <!-- CARDS -->
-  <div
-    class="col-md-6 col-lg-4 mb-4"
-    *ngFor="let machine of machinesWithExercises"
-  >
-
-    <div
-      class="card shadow-sm h-100 border-start border-4 border-primary"
-    >
-
+<div class="row">
+  <div class="col-md-6 col-lg-4 mb-4" *ngFor="let machine of machinesWithExercises">
+    <div class="card shadow-sm h-100 border-start border-4 border-primary">
       <div class="card-body">
+        <a [routerLink]="['/machines']" class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title fw-bold text-dark m-0">{{ machine.name }}</h5>
+            <span class="badge bg-primary rounded-pill">{{ machine.dims }} Neuronas</span>
+          </div>
+        </a>
 
-        <!-- HEADER -->
-        <div
-          class="d-flex justify-content-between align-items-center mb-3"
-        >
-
-          <h5 class="card-title fw-bold text-dark m-0">
-
-            {{ machine.name }}
-
-          </h5>
-
-          <span
-            class="badge bg-primary rounded-pill"
-          >
-
-            {{ machine.dims }} Neuronas
-
-          </span>
-
-        </div>
-
-        <!-- FECHA -->
         <p class="card-text text-muted small">
-
-          Creada el:
-          {{ machine.created_at | date:'shortDate' }}
-
+          Creada el: {{ machine.created_at | date:'shortDate' }}
         </p>
 
         <hr>
 
-        <!-- EJERCICIOS -->
-        <h6
-          class="fw-bold text-secondary mb-2 small text-uppercase"
-        >
-
-          Ejercicios Ejecutados
-          ({{ machine.ejerciciosFiltrados.length }})
-
+        <h6 class="fw-bold text-secondary mb-2 small text-uppercase">
+          Ejercicios Ejecutados ({{ machine.ejerciciosFiltrados.length }})
         </h6>
 
-        <!-- LISTA -->
-        <div
-          class="list-group list-group-flush overflow-auto"
-          style="max-height: 220px;"
-        >
-
-          <!-- VACÍO -->
-          <div
-            *ngIf="
-              machine.ejerciciosFiltrados.length === 0
-            "
-            class="text-muted small py-2 fst-italic"
-          >
-
+        <div class="list-group list-group-flush overflow-auto" style="max-height: 220px;">
+          <div *ngIf="machine.ejerciciosFiltrados.length === 0" class="text-muted small py-2 fst-italic">
             Sin ejecuciones todavía.
-
           </div>
 
-          <!-- ITEMS -->
-          <a
-            *ngFor="
-              let ex of machine.ejerciciosFiltrados
-            "
-            [routerLink]="['/exercises']"
-            class="list-group-item list-group-item-action"
-          >
-
-            <div
-              class="d-flex justify-content-between align-items-center"
-            >
-
-              <div>
-
-                <strong>
-                  Ejercicio #{{ ex.id }}
-                </strong>
-
-              </div>
-
-              <span
-                class="badge"
-                [ngClass]="
-                  ex.is_convergent
-                    ? 'bg-success'
-                    : 'bg-danger'
-                "
-              >
-
-                {{
-                  ex.is_convergent
-                    ? 'Convergió'
-                    : 'Osciló'
-                }}
-
+          <a *ngFor="let ex of machine.ejerciciosFiltrados"
+             [routerLink]="['/exercises']"
+             class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong>Ejercicio #{{ ex.id }}</strong>
+              <span class="badge" [ngClass]="ex.is_convergent ? 'bg-success' : 'bg-danger'">
+                {{ ex.is_convergent ? 'Convergió' : 'Osciló' }}
               </span>
-
             </div>
-
-            <small class="text-muted">
-
-              {{ ex.created_at | date:'short' }}
-
-            </small>
-
+            <small class="text-muted">{{ ex.created_at | date:'short' }}</small>
           </a>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 
-  <!-- VACÍO GENERAL -->
-  <div
-    *ngIf="machinesWithExercises.length === 0"
-    class="text-center text-muted p-5"
-  >
-
+  <div *ngIf="machinesWithExercises.length === 0" class="text-center text-muted p-5">
     No hay máquinas registradas.
-
   </div>
-
 </div>

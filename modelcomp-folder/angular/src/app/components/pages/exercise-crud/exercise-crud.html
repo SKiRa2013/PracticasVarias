@@ -26,6 +26,7 @@
             <select
               formControlName="machine"
               class="form-select"
+              (change)="onMachineChange($event)"
             >
 
               <option value="" disabled>
@@ -47,22 +48,19 @@
           <div class="mb-3">
 
             <label class="form-label small fw-bold text-secondary">
-              Vector de Entrada (Ruido)
+              Vector de Entrada (dibujo inexacto a convertir)
             </label>
-
-            <textarea
-              formControlName="inputs"
-              class="form-control font-monospace small"
-              rows="5"
-              placeholder='[[1, -1, 1], [-1, 1, -1], [1, 1, -1]]'
-            ></textarea>
 
             <div class="form-text small">
               Debe coincidir con las neuronas
               de la máquina.
             </div>
 
+            <input type="file" (change)="onFileSelected($event)" class="form-control" accept="image/*">
+
           </div>
+
+          <canvas #imageCanvas style="display: none;"></canvas>
 
           <!-- BOTÓN -->
           <button
@@ -148,13 +146,6 @@
                 - Máquina #{{ ex.machine }}
 
               </h6>
-
-              <p class="text-muted small mb-2">
-
-                Evaluado el:
-                {{ ex.created_at | date:'short' }}
-
-              </p>
 
               <div class="mb-2">
 
