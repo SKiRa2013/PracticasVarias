@@ -1,11 +1,14 @@
 from apps.album.views import (
+    IndexView,
     TeamCreateView, TeamListView, TeamUpdateView, TeamDeleteView, 
     PlayerCreateView, PlayerListView, PlayerUpdateView, PlayerDeleteView
 )
 
 from django.urls import path
 
-urlpatterns = [
+urlpatterns = [       
+    path('', IndexView.as_view(), name='index'),
+     
     path('teams/create/', TeamCreateView.as_view(), name='team_create'),
     path('teams/', TeamListView.as_view(), name='team_list'),
     path('teams/<int:pk>/edit/', TeamUpdateView.as_view(), name='team_edit'),

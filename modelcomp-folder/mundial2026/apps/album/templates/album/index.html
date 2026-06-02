@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Índice de Endpoints de la API</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; background: #f9f9f9; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 12px 0; }
+        a { text-decoration: none; color: #0066cc; font-size: 18px; font-weight: bold; }
+        a:hover { color: #003366; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>📌 Índice de Endpoints Disponibles</h1>
+    
+    <ul>
+        {% for endpoint in endpoints %}
+            <li>
+                <a href="{{ endpoint.url }}">{{ endpoint.nombre }}</a> 
+                <small style="color: #666;">({{ endpoint.url }})</small>
+            </li>
+        {% empty %}
+            <li>No se encontraron endpoints registrados.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
