@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
+    <title>Álbum Mundial 2026</title>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="container mt-4">
+            <h1 class="mb-4">Álbum Mundial 2026</h1> <br>
+            
+            <div class="col">
+                <a href="{% url 'team_create' %}" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle"></i> Añadir nueva selección
+                </a>
+
+                <a href="{% url 'player_list' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Lista de jugadores
+                </a>
+            </div>
+            <br><br>
+
+            <div class="row">
+                {% for team in object_list %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+
+                        <style>
+                            .card-img-top {
+                                width: 100%;       /* Ocupa todo el ancho de la tarjeta */
+                                height: 200px;     /* Altura fija para todas */
+                                object-fit: contain; /* Muestra toda la imagen completa */
+                                background-color: #f8f9fa; /* Color de fondo por si la imagen es transparente */
+                            }
+
+                            .btn-orange {
+                                background-color: #fd7e14; /* Un naranja vibrante tipo Bootstrap */
+                                border-color: #fd7e14;
+                                color: white; /* Texto blanco para mejor contraste */
+                            }
+
+                            .btn-orange:hover {
+                                background-color: #e86a0d; /* Un tono un poco más oscuro al pasar el ratón */
+                                border-color: #e86a0d;
+                                color: white;
+                            }
+                        </style>
+
+                        <img src="{{ team.logo.url }}" class="card-img-top p-3" alt="{{ team.name }}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ team.name }}</h5>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#teamModal{{ team.id }}">
+                                Ver Álbum
+                            </button>
+
+                            <a href="{% url 'team_edit' team.id %}" class="btn btn-sm btn-orange">Editar</a>
+                            <a href="{% url 'team_delete' team.id %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="teamModal{{ team.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ team.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ team.team.url }}" class="img-fluid mb-3" alt="Foto Equipo">
+                                <h6>Jugadores:</h6>
+                                
+                                <div class="row">
+                                    {% for player in team.get_player.all %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100">
+                                                {% if player.photo %}
+                                                    <img src="{{ player.photo.url }}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                                {% endif %}
+                                                <div class="card-body p-2 text-center">
+                                                    <h6 class="card-title">{{ player.first_name }} {{ player.last_name }}</h6>
+                                                    <p class="card-text small text-muted">
+                                                        Peso: {{ player.weight }}kg<br>
+                                                        Altura: {{ player.height }}cm<br><br>
+                                                        {{ player.comment }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="col-12">
+                                            <p class="text-muted text-center"><em>No hay jugadores registrados en este equipo.</em></p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

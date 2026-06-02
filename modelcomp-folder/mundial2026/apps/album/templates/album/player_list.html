@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
+    <title>Álbum Mundial 2026</title>
+</head>
+<body>
+    <div class="container">
+
+        <div class="container mt-4">
+            <h1>Jugadores</h1>
+            
+            <div class="col">
+                <a href="{% url 'player_create' %}" class="btn btn-success btn-lg">Añadir Jugador</a>
+                
+                <a href="{% url 'team_list' %}" class="btn btn-primary btn-lg">Lista de selecciones</a>
+            </div>
+
+            <style>
+                .card-img-top {
+                    width: 100%;       /* Ocupa todo el ancho de la tarjeta */
+                    height: 200px;     /* Altura fija para todas */
+                    object-fit: contain; /* Muestra toda la imagen completa */
+                    background-color: #f8f9fa; /* Color de fondo por si la imagen es transparente */
+                }
+
+                .btn-orange {
+                    background-color: #fd7e14; /* Un naranja vibrante tipo Bootstrap */
+                    border-color: #fd7e14;
+                    color: white; /* Texto blanco para mejor contraste */
+                }
+
+                .btn-orange:hover {
+                    background-color: #e86a0d; /* Un tono un poco más oscuro al pasar el ratón */
+                    border-color: #e86a0d;
+                    color: white;
+                }
+            </style>
+            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Equipo</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in object_list %}
+                    <tr>
+                        <td><img src="{{ player.photo.url }}" width="50"></td>
+                        <td>{{ player.first_name }} {{ player.last_name }}</td>
+                        <td>{{ player.team.name }}</td>
+                        <td>
+                            <a href="{% url 'player_edit' player.id %}" class="btn btn-sm btn-orange">Editar</a>
+                            <a href="{% url 'player_delete' player.id %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
