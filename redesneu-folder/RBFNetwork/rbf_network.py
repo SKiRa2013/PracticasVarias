@@ -70,53 +70,51 @@ class RBFNetwork(MLPerceptron):
         print(f"¡ALERTA! Se alcanzó el número máximo de epochs: {max_iterations}")
         return result, historia_reconstruccion, max_iterations
 
-
-
-def graficar_evolucion(historia, img_size, pasos=5):
-    """
-    Orientación:
-    - Filas: Momentos en el tiempo (Épocas)
-    - Columnas: Neuronas (Prototipos)
-    """
-    total_pasos = len(historia)
-    n_neuronas = historia[0].shape[0]
-    
-    # Seleccionamos los índices de las épocas
-    pasos_idx = np.linspace(0, total_pasos - 1, pasos, dtype=int)
-    
-    # Invertimos: Filas = Épocas, Columnas = Neuronas
-    fig, axes = plt.subplots(pasos, n_neuronas, 
-                             figsize=(n_neuronas * 2.5, pasos * 3))
-    
-    # Asegurar que axes sea siempre 2D (caso de una sola neurona o época)
-    if pasos == 1: axes = np.expand_dims(axes, axis=0)
-    if n_neuronas == 1: axes = np.expand_dims(axes, axis=1)
-
-    for row_idx, p_idx in enumerate(pasos_idx):
-        pesos_epoca = historia[p_idx]
+    def graficar_evolucion(self, historia, img_size, canales, pasos=5):
+        """
+        Orientación:
+        - Filas: Momentos en el tiempo (Épocas)
+        - Columnas: Neuronas (Prototipos)
+        """
+        total_pasos = len(historia)
+        n_neuronas = historia[0].shape[0]
         
-        for col_idx in range(n_neuronas):
-            ax = axes[row_idx, col_idx]
-            
-            # Reconstruir imagen del peso (centroide)
-            img = pesos_epoca[col_idx].reshape(img_size[1], img_size[0], 3)
-            
-            # Mostrar imagen
-            ax.imshow(np.clip(img.astype(np.float32), 0, 1))
-            
-            # Etiqueta de Época solo en la primera columna
-            if col_idx == 0:
-                ax.set_ylabel(f"Época {row_idx}", fontsize=12, fontweight='bold')
-            
-            # Etiqueta de Neurona solo en la primera fila
-            if row_idx == 0:
-                ax.set_title(f"Neurona {col_idx}", fontsize=10)
-            
-            ax.axis('off')
+        # Seleccionamos los índices de las épocas
+        pasos_idx = np.linspace(0, total_pasos - 1, pasos, dtype=int)
+        
+        # Invertimos: Filas = Épocas, Columnas = Neuronas
+        fig, axes = plt.subplots(pasos, n_neuronas, 
+                                figsize=(n_neuronas * 2.5, pasos * 3))
+        
+        # Asegurar que axes sea siempre 2D (caso de una sola neurona o época)
+        if pasos == 1: axes = np.expand_dims(axes, axis=0)
+        if n_neuronas == 1: axes = np.expand_dims(axes, axis=1)
 
-    plt.tight_layout()
-    plt.suptitle("Evolución Temporal de los Prototipos RBF (Vertical)", fontsize=16, y=0.96)
-    plt.show()
+        for row_idx, p_idx in enumerate(pasos_idx):
+            pesos_epoca = historia[p_idx]
+            
+            for col_idx in range(n_neuronas):
+                ax = axes[row_idx, col_idx]
+                
+                # Reconstruir imagen del peso (centroide)
+                img = pesos_epoca[col_idx].reshape(img_size[1], img_size[0], canales)
+                
+                # Mostrar imagen
+                ax.imshow(np.clip(img.astype(np.float32), 0, 1))
+                
+                # Etiqueta de Época solo en la primera columna
+                if col_idx == 0:
+                    ax.set_ylabel(f"Época {row_idx}", fontsize=12, fontweight='bold')
+                
+                # Etiqueta de Neurona solo en la primera fila
+                if row_idx == 0:
+                    ax.set_title(f"Neurona {col_idx}", fontsize=10)
+                
+                ax.axis('off')
+
+        plt.tight_layout()
+        plt.suptitle("Evolución Temporal de los Prototipos RBF (Vertical)", fontsize=16, y=0.96)
+        plt.show()
 
 if __name__ == "__main__":
     personajes = {
@@ -173,5 +171,5 @@ if __name__ == "__main__":
     result, story, epoch = red_rbf.calculate_result(X, Y, max_iterations=100)
 
     # 5. Graficar
-    graficar_evolucion(story, img_size=size_comun, pasos=min(epoch, 5))
+    red_rbf.graficar_evolucion(story, img_size=size_comun, pasos=min(epoch, 5), canales=3)
     

@@ -106,6 +106,7 @@ class MLPerceptron:
         ax.set_xlabel('Epoch')
         ax.set_ylabel('Error (%)')
 
+        plt.suptitle("Perceptrón Multicapa: Gráfica de Error Mínimo Cuadrado (MSE) vs Iteraciones")
         plt.show()
 
 

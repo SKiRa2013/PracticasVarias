@@ -46,9 +46,9 @@ class Kohonen(PerceptronLayer):
         
         return np.exp(-exponent)
 
-    def graphicate(self, img_size: tuple[int]):
+    def graphicate(self, img_size: tuple[int], canales):
         rows, cols = img_size
-        fig, axes = plt.subplots(rows, cols, figsize=(12, 12))
+    #    fig, axes = plt.subplots(rows, cols, figsize=(12, 12))
         
         # 1. Determinar la geometría de la rejilla de neuronas
         # Si tu mapa es 2D, la raíz cuadrada de self.neurons nos da el lado
@@ -70,7 +70,7 @@ class Kohonen(PerceptronLayer):
             try:
                 # Reconstrucción RGB: (alto, ancho, 3)
                 # Usamos img_size[1] para filas y img_size[0] para columnas
-                imagen_neurona = self.weight[i].reshape((img_size[1], img_size[0], 3))
+                imagen_neurona = self.weight[i].reshape((img_size[1], img_size[0], canales))
                 
                 # Clipping para asegurar que los colores sean válidos [0, 1]
                 imagen_visual = np.clip(imagen_neurona.astype(np.float32), 0, 1)
@@ -158,5 +158,5 @@ if __name__ == "__main__":
     som.calculate_centroids(max_iterations=500)
     
     # 4. Graficar el resultado final
-    som.graphicate(size_comun)
+    som.graphicate(size_comun, canales=3)
         

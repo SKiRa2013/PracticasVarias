@@ -50,23 +50,22 @@ class Hopfield(PerceptronLayer):
         else:
             raise RuntimeError(f"Se ha alcanzado el máximo de {epoch} epochs. No hay convergencia.")
 
+    def graphicate(self, original, noisy, recovered, shape=(5, 5)):
+        fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+        
+        axs[0].imshow(original.reshape(shape), cmap='gray_r')
+        axs[0].set_title('Patrón Original (Z)')
+        axs[0].axis('off')
 
-def graphicate(original, noisy, recovered, shape=(5, 5)):
-    fig, axs = plt.subplots(1, 3, figsize=(12, 4))
-    
-    axs[0].imshow(original.reshape(shape), cmap='gray_r')
-    axs[0].set_title('Patrón Original (Z)')
-    axs[0].axis('off')
+        axs[1].imshow(noisy.reshape(shape), cmap='gray_r')
+        axs[1].set_title('Entrada con Ruido')
+        axs[1].axis('off')
 
-    axs[1].imshow(noisy.reshape(shape), cmap='gray_r')
-    axs[1].set_title('Entrada con Ruido')
-    axs[1].axis('off')
+        axs[2].imshow(recovered.reshape(shape), cmap='gray_r')
+        axs[2].set_title('Resultado Red Hopfield')
+        axs[2].axis('off')
 
-    axs[2].imshow(recovered.reshape(shape), cmap='gray_r')
-    axs[2].set_title('Resultado Red Hopfield')
-    axs[2].axis('off')
-
-    plt.show()
+        plt.show()
 
 if __name__ == "__main__":
     # Letra 'Z'
@@ -104,4 +103,4 @@ if __name__ == "__main__":
     result = hop.iterate(char_z, max_iterations=20)
 
     # Original, ruido, hopfield
-    graphicate(char_z, test_input, result)
+    hop.graphicate(char_z, test_input, result)
